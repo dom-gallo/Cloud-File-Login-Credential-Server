@@ -30,22 +30,31 @@ public class HomeController {
 
     @GetMapping
     public String getHomeView(Authentication auth, Note note, Credential credential, Model model){
-
-       String currentUsername = auth.getName();
-       int userId = userService.getUser(currentUsername).getUserId();
-
-       List<Note> notes = noteService.getNotes(userId);
-        List<Credential> credentials = List.of(
-                new Credential(1,"github.com", "dewclaw",
-                        "encryptionkey",
-                        "encryptedPassword", 1),
-                new Credential(1,"facebook.com", "dgallo1122",
-                        "encryptionkey",
-                        "encryptedPassword", 1)
-        );
-        model.addAttribute("notes", notes);
-        model.addAttribute("credentialList", credentials);
+        
         System.out.println("Home controller hit");
-        return "home";
+        
+        // get current username
+       String currentUsername = auth.getName();
+       
+       // get userID from DB
+       int userId = userService.getUser(currentUsername).getUserId();
+       
+        // get initial notes state from DB
+       List<Note> notes = noteService.getNotes(userId);
+       
+       List<Credential> credentials = credentialService.getMockCredentials();
+       
+       for (Credential cred: credentials){
+           System.out.println(cred.toString());
+       }
+       
+       model.addAttribute("notes", notes);
+       
+       
+       model.addAttribute("CredentialList", credentials);
+       
+       
+       
+       return "home";
     }
 }
