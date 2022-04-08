@@ -24,7 +24,7 @@ Your tech lead is excited to work with you and has laid out a development roadma
 3. Application tests with Selenium
 
 ### The Back-End
-The back-end is all about security and connecting the front-end to database data and actions. 
+The back-end is all about security and connecting the front-end to database data and actions. --
 
 1. Managing user access with Spring Security
  - You have to restrict unauthorized users from accessing pages other than the login and signup pages. To do this, you must create a security configuration class that extends the `WebSecurityConfigurerAdapter` class from Spring. Place this class in a package reserved for security and configuration. Often this package is called `security` or `config`.
