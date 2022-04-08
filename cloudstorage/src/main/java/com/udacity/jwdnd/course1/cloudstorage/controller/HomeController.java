@@ -18,16 +18,17 @@ import java.util.List;
 @RequestMapping("/home")
 public class HomeController {
 
-    UserService userService;
-    NoteService noteService;
-    CredentialService credentialService;
+    private final UserService userService;
+    private final NoteService noteService;
+    private final CredentialService credentialService;
 
     public HomeController(UserService userService, NoteService noteService, CredentialService credentialService) {
         this.userService = userService;
         this.noteService = noteService;
         this.credentialService = credentialService;
     }
-
+    
+    
     @GetMapping
     public String getHomeView(Authentication auth, Note note, Credential credential, Model model){
         
@@ -42,19 +43,17 @@ public class HomeController {
         // get initial notes state from DB
        List<Note> notes = noteService.getNotes(userId);
        
-       List<Credential> credentials = credentialService.getMockCredentials();
-       
-       for (Credential cred: credentials){
-           System.out.println(cred.toString());
-       }
-       
-       model.addAttribute("notes", notes);
-       
-       
-       model.addAttribute("CredentialList", credentials);
-       
-       
-       
-       return "home";
+//       List<Credential> credentials = credentialService.getMockCredentials();
+//
+//       for (Credential cred: credentials){
+//           System.out.println(cred.toString());
+//       }
+        
+        // get initial credentials from DB
+        List<Credential> credentials = credentialService.getCredentialsForUserId(userId);
+        
+        model.addAttribute("notes", notes);
+        model.addAttribute("CredentialList", credentials);
+        return "home";
     }
 }
