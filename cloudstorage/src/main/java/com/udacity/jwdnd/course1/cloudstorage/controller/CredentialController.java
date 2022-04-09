@@ -7,6 +7,7 @@ import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -39,5 +40,14 @@ public class CredentialController {
 	public List<Credential> getCredentials(Authentication auth){
 		int userId = userService.getUser(auth.getName()).getUserId();
 		return credentialService.getCredentialsForUserId(userId);
+	}
+	@GetMapping("/delete/{credentialId}")
+	public String deleteCredential(@PathVariable int credentialId, Authentication auth) throws Exception{
+		int userId = userService.getUser(auth.getName()).getUserId();
+		int rowsAffected = credentialService.deleteCredential(credentialId, userId);
+		if (rowsAffected < 0) {
+			throw new Exception("Error deleting credential from DB");
+		}
+		return "redirect:/home";
 	}
 }

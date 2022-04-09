@@ -42,9 +42,10 @@ public class SignupController {
             model.addAttribute("signupSuccess", true);
         } else {
             model.addAttribute("signupError", signupError);
+            return "/signup";
         }
         System.out.println("CREATED USER ");
         System.out.println(user.toString());
-        return "signup";
+        return "/login";
     }
 }

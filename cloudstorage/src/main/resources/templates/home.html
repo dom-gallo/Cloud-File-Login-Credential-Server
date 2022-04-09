@@ -25,7 +25,7 @@
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
-                        <form action="#" enctype="multipart/form-data" method="POST">
+                        <form action="#"  enctype="multipart/form-data" method="POST" th:action="@{/file/upload}">
                             <div class="container">
                                 <div class="row" style="margin: 1em;">
                                     <div class="col-sm-2">
@@ -49,12 +49,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr th:each="file:${files}">
                                     <td>
-                                        <a target="_blank" class="btn btn-success">View</a>
-                                        <a  class="btn btn-danger">Delete</a>
+                                        <a class="btn btn-success"
+                                           target="_blank"
+                                           th:href="@{/file/download/{fileId}(fileId=*{file.fileId})}">View</a>
+                                        <a class="btn btn-danger"
+                                           th:href="@{/file/delete/{fileId}(fileId=*{file.fileId})}">Delete</a>
                                     </td>
-                                    <th scope="row">ExampleFile.txt</th>
+                                    <th scope="row" th:text="*{file.fileName}">ExampleFile.txt</th>
                                 </tr>
                                 </tbody>
                             </table>
@@ -128,7 +131,7 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
-                        <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
+                        <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()"> <!--- CREATE NEW  CREDENTIAL  -->
                             + Add a New Credential
                         </button>
 
@@ -144,9 +147,20 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each="credential:${CredentialList}">
-                                    <td>
-                                        <button type="button" class="btn btn-success">Edit</button>
-                                        <a class="btn btn-danger">Delete</a>
+                                    <td> <!-- showCredentialModal(credentialId, url, username, password) -->
+                                        <!-- onclick="showCredentialModal(this.getAttribute('data-credentialId'),this.getAttribute('data-credentialUrl'),this.getAttribute('data-credentialUsername'),this.getAttribute('data-credentialPassword'))" -->
+                                        <button type="button" class="btn btn-success"
+                                                th:onclick="javascript: showCredentialModal([[${credential.credentialId}]], [[${credential.url}]], [[${credential.username}]], [[${encryptionService.decryptValue(credential.password, credential.key)}]])"
+                                                th:data-credential="*{credential}"
+                                                th:data-credentialUrl="*{credential.url}"
+                                                th:data-credentialUsername="*{credential.username}"
+                                                th:data-credentialPassword="*{credential.password}"
+                                                th:data-credentialId="*{credential.credentialId}"
+                                                th:data-userId="credential.userId"
+                                        >Edit</button> <!--- CREDENTIAL LIST -->
+                                        <a class="btn btn-danger"
+                                           th:href="@{/credential/delete/{credentialId}(credentialId=*{credential.credentialId})}"
+                                        >Delete</a>
                                     </td>
                                     <th th:text="*{credential.url}" scope="row">Example Credential URL</th>
                                     <td th:text="*{credential.username}">Example Credential Username</td>
@@ -156,7 +170,7 @@
                             </table>
                         </div>
 
-                        <div class="modal fade" id="credentialModal" tabindex="-1" role="dialog" aria-labelledby="credentialModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="credentialModal" tabindex="-1" role="dialog" aria-labelledby="credentialModalLabel" aria-hidden="true"> <!--- CREDENTIAL MODAL -->
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
