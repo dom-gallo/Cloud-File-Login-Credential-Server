@@ -58,4 +58,11 @@ public class FileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
                 .body(file.getFileData());
     }
+    @GetMapping("/delete/{fileId}")
+    public String deleteFileForId(@PathVariable int fileId, Authentication auth) {
+        int userId = userService.getUser(auth.getName()).getUserId();
+        int rowsAffected =  fileService.deleteFileWithId(fileId, userId);
+
+        return "redirect:/home";
+    }
 }
